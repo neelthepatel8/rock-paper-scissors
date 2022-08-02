@@ -1,16 +1,22 @@
+let winner;
+let playerScore = 0,
+  computerScore = 0;
+const choices = document.querySelectorAll(".choice");
+choices.forEach((choice) =>
+  choice.addEventListener("click", function (e) {
+    updateScores(playRound(e.target.textContent.toLowerCase(), getComputerChoice()));
+    if (playerScore == 5 || computerScore == 5) declareWinner();
+  })
+);
+
+// get computer input (randomizer)
 function getComputerChoice() {
-  const choices = ["rock", "paper", "scissors"];
+  const choices = ["rock", "paper", "scissor"];
   let randomNumber = Math.floor(Math.random() * 3);
   return choices[randomNumber];
 }
 
-function getPlayerChoice() {
-  return prompt("Enter your choice: ").toLowerCase();
-}
-
-function playRound() {
-  let computerChoice = getComputerChoice();
-  let playerChoice = getPlayerChoice();
+function playRound(playerChoice, computerChoice) {
   if (computerChoice == playerChoice) return "draw";
   if (computerChoice == "rock" && playerChoice == "paper") return "player";
   if (computerChoice == "rock" && playerChoice == "scissor") return "computer";
@@ -20,14 +26,19 @@ function playRound() {
   if (computerChoice == "scissor" && playerChoice == "paper") return "computer";
 }
 
-function startGame(){
-    let computerScore = 0, playerScore = 0;
-    for (let i = 0; i < 5; i++){
-        let winner = playRound();
-        if (winner == "computer") computerScore++;
-        if (winner == "player") playerScore++;
-    }
-    if (computerScore > playerScore) return "Computer Wins";
-    if (computerScore < playerScore) return "Player Wins";
-    if (computerScore == playerScore) return "It's a tie";
+function updateScores(winner){
+  if (winner == "computer") computerScore++;
+  if (winner == "player") playerScore++;
+
+  const compCounter = document.querySelector(".comp-score");
+  const playerCounter = document.querySelector(".player-score");
+  compCounter.textContent = `Computer Score: ${computerScore}`;
+  playerCounter.textContent = `Player Score: ${playerScore}`;
+}
+
+function declareWinner(){
+  if(playerScore == 5) winner = "Player Wins! <3";
+  if(computerScore == 5) winner = "Computer Wins! :P";
+  const result = document.querySelector(".results");
+  result.textContent = winner;
 }
